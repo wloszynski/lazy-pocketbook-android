@@ -19,13 +19,13 @@ public class MainActivity extends AppCompatActivity {
         final Button button = findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "FORWARD", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "_FORWARD_", Toast.LENGTH_SHORT).show();
             }
         });
         final Button button2 = findViewById(R.id.button2);
         button2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "BACKWARD", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "_BACKWARD_", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
             case R.id.item1:
-                Toast.makeText(this, "SETTINGS", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "_SETTINGS_", Toast.LENGTH_SHORT).show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

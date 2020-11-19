@@ -27,30 +27,8 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.example_menu, menu);
-
-        File root = new File(Environment.getExternalStorageDirectory(),"/DCIM/LAZYPOCKETBOOK");
-        File filepath = new File (root, "credentials.txt");
-
-        try {
-            BufferedReader br = new BufferedReader(new FileReader(filepath));
-
-            String line;
-
-            line = br.readLine();
-            String[] splitStr = line.split("\\s+");
-            login = splitStr[0];
-            password = splitStr[1];
-            Toast.makeText(MainActivity.this, login + password, Toast.LENGTH_SHORT).show();
-            br.close();
-        }
-        catch (IOException e) {
-            //You'll need to add proper error handling here
-            Toast.makeText(MainActivity.this, "problems with finding file credentials.txt", Toast.LENGTH_SHORT).show();
-        }
-
         return true;
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +37,58 @@ public class MainActivity extends AppCompatActivity {
         isReadStoragePermissionGranted();
         isWriteStoragePermissionGranted();
 
-        basicFileAndStructure();
+        File file = new File(getFilesDir()+"/credentials.txt");
+//        Toast.makeText(getApplicationContext(), file.toString(), Toast.LENGTH_LONG).show();
+
+        if(file.exists()){
+//            Toast.makeText(getApplicationContext(), "EXISTS", Toast.LENGTH_LONG).show();
+            FileInputStream fis = null;
+            try {
+                fis = openFileInput("credentials.txt");
+                InputStreamReader isr = new InputStreamReader(fis);
+                BufferedReader br = new BufferedReader(isr);
+                String text;
+                text = br.readLine();
+//                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if(fis != null){
+                    try {
+                        fis.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }else{
+//            Toast.makeText(getApplicationContext(), "DOES NOT EXIST", Toast.LENGTH_LONG).show();
+            FileOutputStream fos = null;
+            login = "169.254.0.1";
+            password ="1257";
+            String cred = login + " " + password;
+
+            try {
+                fos = openFileOutput("credentials.txt", MODE_PRIVATE);
+                fos.write(cred.getBytes());
+//                Toast.makeText(getApplicationContext(), "Saved to " + getFilesDir() + "/credentials.txt", Toast.LENGTH_SHORT).show();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally{
+                if(fos != null) {
+                    try {
+                        fos.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
 
         final Button button = findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
@@ -86,34 +115,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
-        }
-    }
-    public void basicFileAndStructure(){
-        try{
-            File root = new File(Environment.getExternalStorageDirectory(),"/DCIM/LAZYPOCKETBOOK");
-
-            if(!root.exists()) {
-                root.mkdir();
-//                Toast.makeText(MainActivity.this, "folder created", Toast.LENGTH_SHORT).show();
-            }
-
-            File properLinks = new File (root, "credentials.txt");
-            if(properLinks.exists()){
-//                Toast.makeText(MainActivity.this, "PROPERLINKS FILE EXISTS", Toast.LENGTH_SHORT).show();
-            }else{
-//                Toast.makeText(MainActivity.this, "proplinks", Toast.LENGTH_SHORT).show();
-                FileWriter writerProperLinks = new FileWriter(properLinks);
-//                Toast.makeText(MainActivity.this, "writer", Toast.LENGTH_SHORT).show();
-
-                String properLinksContent = "root@169.254.0.1 1257";
-                writerProperLinks.append(properLinksContent);
-                writerProperLinks.close();
-//                Toast.makeText(MainActivity.this, "proplinks end", Toast.LENGTH_SHORT).show();
-            }
-
-        } catch (Exception e){
-            e.printStackTrace();
-//            Toast.makeText(MainActivity.this, "RESTART YOUR MOBILE", Toast.LENGTH_SHORT).show();
         }
     }
 

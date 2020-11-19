@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
+import com.jcraft.jsch.*;
 
 import java.io.*;
 
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
 
     String login;
     String password;
+    String username = "root";
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -89,21 +91,71 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-
         final Button button = findViewById(R.id.button1);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "_FORWARD_", Toast.LENGTH_SHORT).show();
-            }
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSch jsch = new JSch();
+                            Session session = jsch.getSession(username, login, 22);
+                            session.setPassword(password);
+                            session.setConfig("StrictHostKeyChecking", "no");
+                            System.out.println("Establishing Connection...");
+                            session.connect();
+                            System.out.println("Connection established.");
+
+                            Channel channel = session.openChannel("exec");
+                            ((ChannelExec) channel).setCommand("cat f.txt > /dev/input/event0");
+                            channel.setInputStream(null);
+                            ((ChannelExec) channel).setErrStream(System.err);
+
+                            InputStream in = channel.getInputStream();
+                            channel.connect();
+
+                            channel.disconnect();
+                            session.disconnect();
+
+                        } catch (JSchException | IOException e) {
+                        }
+                    }
+                });
+                thread.start();}
+
+
         });
         final Button button2 = findViewById(R.id.button2);
         button2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "_BACKWARD_", Toast.LENGTH_SHORT).show();
-            }
+                Thread thread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSch jsch = new JSch();
+                            Session session = jsch.getSession(username, login, 22);
+                            session.setPassword(password);
+                            session.setConfig("StrictHostKeyChecking", "no");
+                            System.out.println("Establishing Connection...");
+                            session.connect();
+                            System.out.println("Connection established.");
+
+                            Channel channel = session.openChannel("exec");
+                            ((ChannelExec) channel).setCommand("cat b.txt > /dev/input/event0");
+                            channel.setInputStream(null);
+                            ((ChannelExec) channel).setErrStream(System.err);
+
+                            InputStream in = channel.getInputStream();
+                            channel.connect();
+                            channel.disconnect();
+                            session.disconnect();
+
+                        } catch (JSchException | IOException e) {
+                        }
+                    }
+                });
+                thread.start();}
         });
-
-
     }
 
     @Override

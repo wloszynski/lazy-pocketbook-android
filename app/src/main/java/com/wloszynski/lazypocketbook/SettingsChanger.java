@@ -5,15 +5,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import java.io.*;
 
-public class credentials extends AppCompatActivity {
+public class SettingsChanger extends AppCompatActivity {
 String login;
 String password;
-String text;
+String line_from_credentials_file;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,30 +24,11 @@ String text;
         final TextView password_text = findViewById(R.id.password_text);
         final Button save_button = findViewById(R.id.save_button);
 
-        FileInputStream fis = null;
-        try {
-            fis = openFileInput("credentials.txt");
-            InputStreamReader isr = new InputStreamReader(fis);
-            BufferedReader br = new BufferedReader(isr);
-            text = br.readLine();
-//            Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+        read_credentials_file();
 
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            if(fis != null){
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        String[] strsplit = text.split("\\s");
-        login = strsplit[0];
-        password = strsplit[1];
+        String[] credentials_split = line_from_credentials_file.split("\\s");
+        login = credentials_split[0];
+        password = credentials_split[1];
 
         login_text.setText(login);
         password_text.setText(password);
@@ -77,8 +57,6 @@ String text;
                     }
                     finish();
                 }
-
-
             }
         });
 
@@ -94,5 +72,26 @@ String text;
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         return true;
+    }
+    public void read_credentials_file(){
+        FileInputStream fis = null;
+        try {
+            fis = openFileInput("credentials.txt");
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            line_from_credentials_file = br.readLine();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(fis != null){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }

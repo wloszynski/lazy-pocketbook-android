@@ -2,6 +2,8 @@ package com.wloszynski.lazypocketbook;
 
 import android.Manifest;
 import android.app.ActionBar;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -24,6 +26,13 @@ public class MainActivity extends AppCompatActivity {
     public static String login;
     public static String password;
     public static String username = "root";
+    boolean was_pressed = false;
+
+    public void openDialog(){
+        ConnectionDialog connectionDialog = new ConnectionDialog();
+        connectionDialog.show(getSupportFragmentManager(), "Connection dialog");
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -38,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
         isReadStoragePermissionGranted();
         isWriteStoragePermissionGranted();
-        System.out.println("hejka");
 
         File file = new File(getFilesDir()+"/credentials.txt");
 //        Toast.makeText(getApplicationContext(), file.toString(), Toast.LENGTH_LONG).show();
@@ -102,13 +110,15 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
-                            System.out.println(username+login);
+                            if (was_pressed) load_data();
+
+                            System.out.println(username + login);
                             JSch jsch = new JSch();
                             Session session = jsch.getSession(username, login, 22);
                             session.setPassword(password);
                             session.setConfig("StrictHostKeyChecking", "no");
                             System.out.println("Establishing Connection...");
-                            session.connect();
+                            session.connect(4000);
                             System.out.println("Connection established.");
 
                             Channel channel = session.openChannel("exec");
@@ -123,27 +133,31 @@ public class MainActivity extends AppCompatActivity {
                             session.disconnect();
 
                         } catch (JSchException | IOException e) {
+                            openDialog();
                             e.printStackTrace();
                         }
                     }
                 });
-                thread.start();}
-
-
+                thread.start();
+            }
         });
+
         final Button button2 = findViewById(R.id.button2);
         button2.setOnClickListener(new View.OnClickListener() {
+
             public void onClick(View v) {
                 Thread thread2 = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
+                            if(was_pressed) load_data();
+
                             JSch jsch = new JSch();
                             Session session = jsch.getSession(username, login, 22);
                             session.setPassword(password);
                             session.setConfig("StrictHostKeyChecking", "no");
                             System.out.println("Establishing Connection...");
-                            session.connect();
+                            session.connect(4000);
                             System.out.println("Connection established.");
 
                             Channel channel=session.openChannel("exec");
@@ -170,6 +184,7 @@ public class MainActivity extends AppCompatActivity {
                             session.disconnect();
                             System.out.println("DONE");
                         } catch (JSchException | IOException e) {
+                            openDialog();
                             e.printStackTrace();
                         }
                     }
@@ -184,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.item1:
                 Intent intent = new Intent(this, credentials.class);
                 startActivity(intent);
+                was_pressed = true;
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -219,9 +235,33 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     }
-    public void update_data(String login, String password){
-        this.login = login;
-        this.password = password;
 
+    public  void load_data(){
+        FileInputStream fis = null;
+        try {
+            fis = openFileInput("credentials.txt");
+            InputStreamReader isr = new InputStreamReader(fis);
+            BufferedReader br = new BufferedReader(isr);
+            String text;
+            text = br.readLine();
+            String[] text_split = text.split("\\s");
+            login = text_split[0];
+            password = text_split[1];
+//                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if(fis != null){
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            was_pressed = false;
+        }
     }
+
 }

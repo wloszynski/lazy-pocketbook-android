@@ -15,7 +15,6 @@ String login;
 String password;
 String text;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +75,7 @@ String text;
                             e.printStackTrace();
                         }
                     }
+                    finish();
                 }
 
 

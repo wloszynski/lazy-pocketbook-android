@@ -21,9 +21,9 @@ import java.io.*;
 
 public class MainActivity extends AppCompatActivity {
 
-    String login;
-    String password;
-    String username = "root";
+    public static String login;
+    public static String password;
+    public static String username = "root";
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         isReadStoragePermissionGranted();
         isWriteStoragePermissionGranted();
+        System.out.println("hejka");
 
         File file = new File(getFilesDir()+"/credentials.txt");
 //        Toast.makeText(getApplicationContext(), file.toString(), Toast.LENGTH_LONG).show();
@@ -51,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
                 BufferedReader br = new BufferedReader(isr);
                 String text;
                 text = br.readLine();
+                String[] text_split = text.split("\\s");
+                login = text_split[0];
+                password = text_split[1];
 //                Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
@@ -68,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         }else{
 //            Toast.makeText(getApplicationContext(), "DOES NOT EXIST", Toast.LENGTH_LONG).show();
             FileOutputStream fos = null;
-            login = "169.254.0.1";
+            login = "192.168.1.25";
             password ="1257";
             String cred = login + " " + password;
 
@@ -98,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         try {
+                            System.out.println(username+login);
                             JSch jsch = new JSch();
                             Session session = jsch.getSession(username, login, 22);
                             session.setPassword(password);
@@ -118,6 +123,7 @@ public class MainActivity extends AppCompatActivity {
                             session.disconnect();
 
                         } catch (JSchException | IOException e) {
+                            e.printStackTrace();
                         }
                     }
                 });
@@ -128,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         final Button button2 = findViewById(R.id.button2);
         button2.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                Thread thread = new Thread(new Runnable() {
+                Thread thread2 = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         try {
@@ -140,21 +146,35 @@ public class MainActivity extends AppCompatActivity {
                             session.connect();
                             System.out.println("Connection established.");
 
-                            Channel channel = session.openChannel("exec");
-                            ((ChannelExec) channel).setCommand("cat b.txt > /dev/input/event0");
+                            Channel channel=session.openChannel("exec");
+                            ((ChannelExec)channel).setCommand("cat b.txt > /dev/input/event0");
                             channel.setInputStream(null);
-                            ((ChannelExec) channel).setErrStream(System.err);
+                            ((ChannelExec)channel).setErrStream(System.err);
 
-                            InputStream in = channel.getInputStream();
+                            InputStream in=channel.getInputStream();
                             channel.connect();
+                            byte[] tmp=new byte[1024];
+                            while(true){
+                                while(in.available()>0){
+                                    int i=in.read(tmp, 0, 1024);
+                                    if(i<0)break;
+                                    System.out.print(new String(tmp, 0, i));
+                                }
+                                if(channel.isClosed()){
+                                    System.out.println("exit-status: "+channel.getExitStatus());
+                                    break;
+                                }
+                                try{Thread.sleep(1000);}catch(Exception ee){}
+                            }
                             channel.disconnect();
                             session.disconnect();
-
+                            System.out.println("DONE");
                         } catch (JSchException | IOException e) {
+                            e.printStackTrace();
                         }
                     }
                 });
-                thread.start();}
+                thread2.start();}
         });
     }
 
@@ -198,5 +218,10 @@ public class MainActivity extends AppCompatActivity {
         else { //permission is automatically granted on sdk<23 upon installation
             return true;
         }
+    }
+    public void update_data(String login, String password){
+        this.login = login;
+        this.password = password;
+
     }
 }

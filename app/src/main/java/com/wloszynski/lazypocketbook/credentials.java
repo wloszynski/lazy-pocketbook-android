@@ -14,7 +14,8 @@ public class credentials extends AppCompatActivity {
 String login;
 String password;
 String text;
-private static final String FILE_NAME = "credentials.txt";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,9 +62,8 @@ private static final String FILE_NAME = "credentials.txt";
                 String cred = login + " " + password;
 
                 try {
-                    fos = openFileOutput(FILE_NAME, MODE_PRIVATE);
+                    fos = openFileOutput("credentials.txt", MODE_PRIVATE);
                     fos.write(cred.getBytes());
-//                    Toast.makeText(getApplicationContext(), "Saved to " + getFilesDir() + "/" + FILE_NAME, Toast.LENGTH_SHORT).show();
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
@@ -77,8 +77,11 @@ private static final String FILE_NAME = "credentials.txt";
                         }
                     }
                 }
+
+
             }
         });
+
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

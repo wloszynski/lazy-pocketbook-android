@@ -32,7 +32,8 @@ Once the device boots after Services install, new menu entry 'Rooted device sett
 * then press CTRL+C on PC
 7. Now exit the SSH with CTRL+D
 8. Download and install .apk file on your mobile
-9. Use LazyPocketBook
+9. Check if login and password in settings (in app) are the same as on your PocketBook. If no change them for the correct ones.
+10. Use the app :) 
 
 
 # Remember

@@ -1,4 +1,4 @@
-# LazyPocketBook PC
+# LazyPocketBook Android
 LazyPocketBook is an app that allows you to change pages remotely on your PocketBook e-reader.
 
 # INSTALLATION GUIDE

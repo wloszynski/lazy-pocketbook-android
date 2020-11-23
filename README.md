@@ -46,7 +46,3 @@ Once the device boots after Services install, new menu entry 'Rooted device sett
 * Basic login is 169.254.0.1 and password is 1257
 * To chech you login, go to settings on your PB, then Rooted device settings, then press System status if IP is blank, it means it is set to default (169.254.0.1)
 
-
-# TO DO 
-1. Make it more user friendly
-

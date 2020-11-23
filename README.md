@@ -30,12 +30,6 @@ Once the device boots after Services install, new menu entry 'Rooted device sett
 * `cat /dev/input/event0 > b.txt`
 * press backward button on your PocketBook
 * then press CTRL+C on PC
-* `cat /dev/input/event0 > h.txt`
-* press home button on your PocketBook
-* then press CTRL+C on PC
-* `cat /dev/input/event0 > o.txt`
-* press option button on your PocketBook
-* then press CTRL+C on PC
 7. Now exit the SSH with CTRL+D
 8. Download and install .apk file on your mobile
 9. Use LazyPocketBook

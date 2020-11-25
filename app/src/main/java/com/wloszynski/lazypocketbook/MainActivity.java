@@ -17,7 +17,7 @@ import com.jcraft.jsch.*;
 import java.io.*;
 
 public class MainActivity extends AppCompatActivity {
-
+//    Version 2.0!!!!
     public static String login;
     public static String password;
     boolean was_pressed = false;

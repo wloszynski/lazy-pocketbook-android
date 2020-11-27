@@ -4,12 +4,10 @@ LazyPocketBook is an app that allows you to change pages remotely on your Pocket
 # INSTALLATION GUIDE
 To use LazyPocketBook you must jailbreak your PocketBook (enable admin access)
 
-1. Download repository
-* Extract repository files on your desktop
-* Extract pb_jailbreak.zip
+1. Download pb_jailbreak.zip and extract it on your Desktop
 2. Connect PocketBook to PC
 * Open your file explorer
-* Turn on viewing hidden files (on Ubuntu it is Ctrl+h)
+* Turn on viewing hidden files (on Ubuntu it is Ctrl+h, on Windows, Windows Explorer, choose Tools > Folder Options. Click the View tab in the Folder Options dialog box. In Advanced Settings, select Show Hidden Files and Folders.)
 * Copy Jailbreak.app and Services.app to your PocketBook Applications folder.
 3. Then from your PocketBook menu
 * Launch @Jailbreak. If it succeeds, it will install root su. It does nothing else. Running it again will undo root.
@@ -39,7 +37,7 @@ Once the device boots after Services install, new menu entry 'Rooted device sett
 # Remember
 * Your Smartphone and PocketBook must be connected to the same network.
 * Basic login is 169.254.0.1 and password is 1257
-* To chech you login, go to settings on your PB, then Rooted device settings, then press System status if IP is blank, it means it is set to default (169.254.0.1)
+* To check your login, go to settings on your PB, then Rooted device settings, then press System status if IP is blank, it means it is set to default (169.254.0.1)
 
 # TODO
 * Add a book chooser menu  :) 
